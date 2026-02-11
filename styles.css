@@ -1,0 +1,122 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 10px;
+}
+
+body {
+    background: #222;
+    font-size: 1.4rem;
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+}
+
+.spritz {
+    color: #ddd;
+    position: relative;
+    width: 30rem;
+    padding: 1rem 0 1.2rem;
+    border-top: 2px solid #ddd;
+    border-bottom: 2px solid #ddd;
+    margin: 10rem auto;
+}
+
+.spritz:before,
+.spritz:after {
+    content: '';
+    position: absolute;
+    left: 40%;
+    height: 0.8rem;
+    width: 2px;
+    margin-left: -1px;
+    background-color: #ddd;
+}
+
+.spritz:before {
+    top: 0;
+}
+
+.spritz:after {
+    bottom: 0;
+}
+
+.spritz-word {
+    font-size: 2.4rem;
+    line-height: 3.2rem;
+    height: 3.2rem;
+    font-weight: 600;
+}
+
+.spritz-word div {
+    color: #ddd;
+    display: table-cell;
+}
+
+.spritz-word div:first-child {
+    width: 40%;
+    text-align: right;
+}
+
+.spritz-word div:nth-child(2) {
+    color: red;
+}
+
+.spritz-word div:last-child {
+    width: 60%;
+    text-align: left;
+}
+
+.settings {
+    margin: 0 auto;
+    max-width: 30rem;
+}
+
+.settings input,
+.settings textarea,
+.settings button {
+    color: #ddd;
+    box-sizing: border-box;
+    border: 0;
+    background: linear-gradient(to bottom, #333, #444);
+    padding: 1rem 1.5rem;
+}
+
+.settings input:focus,
+.settings textarea:focus,
+.settings button:focus {
+    outline: 2px solid #555;
+}
+
+.speed {
+    position: relative;
+    display: block;
+    height: 4rem;
+    width: 18rem;
+    margin: 2rem auto;
+    font-weight: 600;
+    text-align: center;
+}
+
+.demo-text-change,
+.demo-text-pause {
+    margin: 1rem auto;
+    display: block;
+    cursor: pointer;
+    width: 18rem;
+}
+
+.demo-text-change:active,
+.demo-text-pause:active {
+    padding: 1.1rem 1.5rem 0.9rem;
+    background: linear-gradient(to top, #333, #444);
+}
+
+.demo-text {
+    width: 100%;
+    height: 10em;
+    margin: 5rem 0 0;
+    resize: vertical;
+}
