@@ -1,162 +1,136 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#222;
+  --panel:#2b2b2b;
+  --text:#ddd;
+  --muted:#a9a9a9;
+  --accent:#ff3b30;
+  --border:#555;
+  --btn1:#333;
+  --btn2:#444;
 }
 
-html {
-    font-size: 10px;
+html{font-size:10px}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Open Sans','Segoe UI',Arial,sans-serif;
+  font-size:1.4rem;
+  min-height:100vh;
 }
 
-body {
-    background: #222;
-    font-size: 1.4rem;
-    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+/* Center everything, but allow scroll if keyboard opens on mobile */
+.app{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding: max(2rem, env(safe-area-inset-top)) 1.6rem max(2rem, env(safe-area-inset-bottom));
+  gap:2.4rem;
 }
 
-.spritz {
-    color: #ddd;
-    position: relative;
-    width: 30rem;
-    padding: 1rem 0 1.2rem;
-    border-top: 2px solid #ddd;
-    border-bottom: 2px solid #ddd;
-    margin: 2rem auto;
+.spritz{
+  position:relative;
+  width:min(92vw, 36rem);
+  padding:1rem 0 1.2rem;
+  border-top:2px solid var(--text);
+  border-bottom:2px solid var(--text);
 }
 
-.spritz:before,
-.spritz:after {
-    content: '';
-    position: absolute;
-    left: 40%;
-    height: 0.8rem;
-    width: 2px;
-    margin-left: -1px;
-    background-color: #ddd;
+.spritz:before,.spritz:after{
+  content:'';
+  position:absolute;
+  left:40%;
+  height:.8rem;
+  width:2px;
+  margin-left:-1px;
+  background-color:var(--text);
+}
+.spritz:before{top:0}
+.spritz:after{bottom:0}
+
+.spritz-word{
+  font-size:clamp(2.2rem, 5.5vw, 3rem);
+  line-height:clamp(3rem, 7vw, 3.6rem);
+  height:clamp(3rem, 7vw, 3.6rem);
+  font-weight:650;
 }
 
-.spritz:before {
-    top: 0;
+.spritz-word div{display:table-cell;color:var(--text)}
+.spritz-word div:first-child{width:40%;text-align:right}
+.spritz-word div:nth-child(2){color:var(--accent)}
+.spritz-word div:last-child{width:60%;text-align:left}
+
+.settings{
+  width:min(92vw, 36rem);
+  display:flex;
+  flex-direction:column;
+  gap:1.2rem;
 }
 
-.spritz:after {
-    bottom: 0;
+.field{display:flex;flex-direction:column;gap:.6rem}
+.label{color:var(--muted);font-size:1.2rem;letter-spacing:.02em}
+
+.speed,
+.demo-text{
+  width:100%;
+  color:var(--text);
+  border:1px solid #0000;
+  border-radius:1rem;
+  background:linear-gradient(to bottom, var(--btn1), var(--btn2));
+  padding:1.2rem 1.4rem;
+  outline:none;
 }
 
-.spritz-word {
-    font-size: 2.4rem;
-    line-height: 3.2rem;
-    height: 3.2rem;
-    font-weight: 600;
+.speed{height:4.4rem;text-align:center;font-weight:700}
+.demo-text{min-height:10em;max-height:40vh;resize:vertical;line-height:1.4}
+
+.speed:focus,
+.demo-text:focus{border-color:var(--border)}
+
+.primary,
+.control-btn{
+  width:100%;
+  border:0;
+  border-radius:1rem;
+  color:var(--text);
+  background:linear-gradient(to bottom, var(--btn1), var(--btn2));
+  padding:1.2rem 1.6rem;
+  cursor:pointer;
+  font-size:1.5rem;
+  font-weight:650;
 }
 
-.spritz-word div {
-    color: #ddd;
-    display: table-cell;
+.primary:active,
+.control-btn:active{transform:translateY(1px)}
+
+.reading-controls{
+  width:min(92vw, 36rem);
+  display:flex;
+  gap:1.2rem;
 }
 
-.spritz-word div:first-child {
-    width: 40%;
-    text-align: right;
+.reading-controls .control-btn{width:50%}
+
+.control-btn.danger{
+  background:linear-gradient(to bottom, #4a1c1a, #5a2422);
 }
 
-.spritz-word div:nth-child(2) {
-    color: red;
+/* Reading mode: hide settings, keep controls */
+body.reading-mode .settings{display:none}
+body.reading-mode .reading-controls{display:flex}
+
+/* Small screens: make controls easier to tap */
+@media (max-width: 380px){
+  .reading-controls{flex-direction:column}
+  .reading-controls .control-btn{width:100%}
 }
 
-.spritz-word div:last-child {
-    width: 60%;
-    text-align: left;
-}
-
-.settings {
-    margin: 0 auto;
-    max-width: 30rem;
-    transition: opacity 0.3s ease;
-}
-
-.settings.hidden {
-    display: none;
-}
-
-.settings input,
-.settings textarea,
-.settings button {
-    color: #ddd;
-    box-sizing: border-box;
-    border: 0;
-    background: linear-gradient(to bottom, #333, #444);
-    padding: 1rem 1.5rem;
-}
-
-.settings input:focus,
-.settings textarea:focus,
-.settings button:focus {
-    outline: 2px solid #555;
-}
-
-.speed {
-    position: relative;
-    display: block;
-    height: 4rem;
-    width: 18rem;
-    margin: 2rem auto;
-    font-weight: 600;
-    text-align: center;
-}
-
-.demo-text-change {
-    margin: 1rem auto;
-    display: block;
-    cursor: pointer;
-    width: 18rem;
-}
-
-.demo-text-change:active {
-    padding: 1.1rem 1.5rem 0.9rem;
-    background: linear-gradient(to top, #333, #444);
-}
-
-.demo-text {
-    width: 100%;
-    height: 10em;
-    margin: 2rem 0;
-    resize: vertical;
-}
-
-/* Reading Controls */
-.reading-controls {
-    display: flex;
-    gap: 2rem;
-    justify-content: center;
-    margin-top: 3rem;
-}
-
-.control-btn {
-    color: #ddd;
-    background: linear-gradient(to bottom, #333, #444);
-    border: 0;
-    padding: 1rem 2rem;
-    cursor: pointer;
-    font-size: 1.4rem;
-    min-width: 10rem;
-    transition: all 0.2s ease;
-}
-
-.control-btn:hover {
-    background: linear-gradient(to bottom, #444, #555);
-}
-
-.control-btn:active {
-    padding: 1.1rem 2rem 0.9rem;
-    background: linear-gradient(to top, #333, #444);
-}
-
-.control-btn:focus {
-    outline: 2px solid #555;
+/* Short screens (landscape phones): reduce gaps */
+@media (max-height: 520px){
+  .app{gap:1.6rem; justify-content:flex-start; padding-top:max(1.6rem, env(safe-area-inset-top))}
+  .demo-text{max-height:28vh}
 }
