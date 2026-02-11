@@ -21,11 +21,14 @@ var punctuationPauseEnabled = document.getElementById('punctuation_pause');
 var punctuationMultiplier = document.getElementById('punctuation_multiplier');
 var specialPauseEnabled = document.getElementById('special_pause');
 var specialMultiplier = document.getElementById('special_multiplier');
+var numberPauseEnabled = document.getElementById('number_pause');
+var numberMultiplier = document.getElementById('number_multiplier');
 var rewindAmountInput = document.getElementById('rewind_amount');
 
 var LONG_WORD_THRESHOLD = 9;
 var PUNCTUATION_REGEX = /[.,;:!?]+$/;
 var SPECIAL_CHARS_REGEX = /[\(\)\[\]\/\\\-]+$/;
+var NUMBER_REGEX = /\d/;
 
 // Touch gesture variables
 var touchStartX = 0;
@@ -52,6 +55,10 @@ function getIntervalForWord(word) {
 
   if (specialPauseEnabled.checked && SPECIAL_CHARS_REGEX.test(word)) {
     multiplier = Math.max(multiplier, Number(specialMultiplier.value) || 1.3);
+  }
+  
+  if (numberPauseEnabled && numberPauseEnabled.checked && NUMBER_REGEX.test(word)) {
+    multiplier = Math.max(multiplier, Number(numberMultiplier.value) || 1.8);
   }
 
   return baseInterval * multiplier;

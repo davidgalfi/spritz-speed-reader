@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#222222">
   <title>Spritz Speed Reader</title>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
 </head>
 <body>
   <main class="app">
@@ -38,6 +41,14 @@
             <span>Punctuation delay multiplier</span>
           </label>
           <label class="field-inline">
+            <input type="checkbox" id="number_pause" checked />
+            <span>Slow down for numbers (0-9)</span>
+          </label>
+          <label class="field-inline">
+            <input type="number" id="number_multiplier" value="1.8" step="0.1" min="1" max="3" class="small-input" />
+            <span>Number delay multiplier</span>
+          </label>
+          <label class="field-inline">
             <input type="checkbox" id="special_pause" checked />
             <span>Pause at special chars ( ) [ ] / \\ -</span>
           </label>
@@ -68,5 +79,14 @@
   </main>
 
   <script src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => console.log('Service Worker registered', reg))
+          .catch(err => console.log('Service Worker registration failed', err));
+      });
+    }
+  </script>
 </body>
 </html>
