@@ -21,7 +21,6 @@ body{
   min-height:100vh;
 }
 
-/* Center everything, but allow scroll if keyboard opens on mobile */
 .app{
   min-height:100vh;
   display:flex;
@@ -119,17 +118,65 @@ body{
   background:linear-gradient(to bottom, #4a1c1a, #5a2422);
 }
 
-/* Reading mode: hide settings, keep controls */
 body.reading-mode .settings{display:none}
 body.reading-mode .reading-controls{display:flex}
 
-/* Small screens: make controls easier to tap */
+/* Advanced settings */
+.advanced-settings{
+  background:var(--panel);
+  border-radius:1rem;
+  padding:1rem;
+  margin:.6rem 0;
+}
+
+.advanced-settings summary{
+  cursor:pointer;
+  font-weight:600;
+  font-size:1.3rem;
+  color:var(--muted);
+  padding:.6rem;
+  user-select:none;
+}
+
+.advanced-settings summary:hover{color:var(--text)}
+
+.advanced-content{
+  margin-top:1rem;
+  display:flex;
+  flex-direction:column;
+  gap:.8rem;
+}
+
+.field-inline{
+  display:flex;
+  align-items:center;
+  gap:.8rem;
+  font-size:1.3rem;
+}
+
+.field-inline input[type="checkbox"]{
+  width:1.8rem;
+  height:1.8rem;
+  cursor:pointer;
+  accent-color:var(--accent);
+}
+
+.field-inline .small-input{
+  width:6rem;
+  height:3.2rem;
+  text-align:center;
+  border-radius:.6rem;
+  background:linear-gradient(to bottom, var(--btn1), var(--btn2));
+  border:1px solid var(--border);
+  color:var(--text);
+  padding:.4rem;
+}
+
 @media (max-width: 380px){
   .reading-controls{flex-direction:column}
   .reading-controls .control-btn{width:100%}
 }
 
-/* Short screens (landscape phones): reduce gaps */
 @media (max-height: 520px){
   .app{gap:1.6rem; justify-content:flex-start; padding-top:max(1.6rem, env(safe-area-inset-top))}
   .demo-text{max-height:28vh}
