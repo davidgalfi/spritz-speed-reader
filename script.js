@@ -12,10 +12,44 @@ var stopButton = document.getElementById('spritz_stop');
 var wpmInput = document.getElementById('spritz_wpm');
 var readingControlsDiv = document.getElementById('reading_controls');
 
-function getIntervalMs(){
+// Advanced settings
+var longWordPauseEnabled = document.getElementById('long_word_pause');
+var longWordMultiplier = document.getElementById('long_word_multiplier');
+var punctuationPauseEnabled = document.getElementById('punctuation_pause');
+var punctuationMultiplier = document.getElementById('punctuation_multiplier');
+var specialPauseEnabled = document.getElementById('special_pause');
+var specialMultiplier = document.getElementById('special_multiplier');
+
+var LONG_WORD_THRESHOLD = 9;
+var PUNCTUATION_REGEX = /[.,;:!?]+$/;
+var SPECIAL_CHARS_REGEX = /[\(\)\[\]\/\\\-]+$/;
+
+function getBaseIntervalMs(){
   var wpm = Number(wpmInput.value) || 300;
   wpm = Math.max(50, Math.min(1200, wpm));
   return 60000 / wpm;
+}
+
+function getIntervalForWord(word) {
+  var baseInterval = getBaseIntervalMs();
+  var multiplier = 1;
+
+  // Check for long words
+  if (longWordPauseEnabled.checked && word.length >= LONG_WORD_THRESHOLD) {
+    multiplier = Math.max(multiplier, Number(longWordMultiplier.value) || 1.5);
+  }
+
+  // Check for punctuation at end of word
+  if (punctuationPauseEnabled.checked && PUNCTUATION_REGEX.test(word)) {
+    multiplier = Math.max(multiplier, Number(punctuationMultiplier.value) || 2);
+  }
+
+  // Check for special characters
+  if (specialPauseEnabled.checked && SPECIAL_CHARS_REGEX.test(word)) {
+    multiplier = Math.max(multiplier, Number(specialMultiplier.value) || 1.3);
+  }
+
+  return baseInterval * multiplier;
 }
 
 function words_set() {
@@ -41,16 +75,23 @@ function word_show(index) {
     '<div>' + word.slice(stop + 1) + '</div>';
 }
 
-function word_update(intervalTime) {
-  spritz = setInterval(function() {
+function word_update() {
+  function scheduleNext() {
+    if (i >= words.length) {
+      stopReading();
+      return;
+    }
+
+    var currentWord = words[i];
+    var interval = getIntervalForWord(currentWord);
+    
     word_show(i);
     i++;
 
-    if (i >= words.length) {
-      clearInterval(spritz);
-      setTimeout(function(){ stopReading(); }, intervalTime);
-    }
-  }, intervalTime);
+    spritz = setTimeout(scheduleNext, interval);
+  }
+
+  scheduleNext();
 }
 
 function enterReadingMode(){
@@ -64,7 +105,7 @@ function exitReadingMode(){
 }
 
 function startReading() {
-  clearInterval(spritz);
+  clearTimeout(spritz);
   words_set();
 
   if (words.length === 0) {
@@ -82,25 +123,25 @@ function startReading() {
     i = 0;
   }
 
-  word_update(getIntervalMs());
+  word_update();
 }
 
 function pauseReading() {
   if (!isReading) return;
 
   if (!isPaused) {
-    clearInterval(spritz);
+    clearTimeout(spritz);
     isPaused = true;
     pauseButton.textContent = 'Resume';
   } else {
     isPaused = false;
     pauseButton.textContent = 'Pause';
-    word_update(getIntervalMs());
+    word_update();
   }
 }
 
 function stopReading() {
-  clearInterval(spritz);
+  clearTimeout(spritz);
   isPaused = false;
   isReading = false;
   i = 0;
@@ -117,13 +158,12 @@ pauseButton.addEventListener('click', pauseReading);
 stopButton.addEventListener('click', stopReading);
 
 wpmInput.addEventListener('input', function() {
-  if (isReading && !isPaused && spritz) {
-    clearInterval(spritz);
-    word_update(getIntervalMs());
+  if (isReading && !isPaused) {
+    clearTimeout(spritz);
+    word_update();
   }
 });
 
-// Allow spacebar to pause/resume on desktop
 window.addEventListener('keydown', function(e){
   if (e.code === 'Space' && isReading){
     e.preventDefault();
