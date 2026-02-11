@@ -13,6 +13,7 @@ var rewindButton = document.getElementById('spritz_rewind');
 var wpmInput = document.getElementById('spritz_wpm');
 var readingControlsDiv = document.getElementById('reading_controls');
 var spritzArea = document.getElementById('spritz_area');
+var themeToggleBtn = document.getElementById('theme_toggle');
 
 // Advanced settings
 var longWordPauseEnabled = document.getElementById('long_word_pause');
@@ -183,6 +184,31 @@ function rewindReading() {
     word_update();
   }
 }
+
+// Theme Toggle Logic
+function toggleTheme() {
+  document.body.classList.toggle('light-mode');
+  var isLight = document.body.classList.contains('light-mode');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  updateThemeIcon(isLight);
+}
+
+function updateThemeIcon(isLight) {
+  themeToggleBtn.textContent = isLight ? '☀️' : '🌙';
+  themeToggleBtn.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
+}
+
+// Initialize Theme
+var savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'light') {
+  document.body.classList.add('light-mode');
+  updateThemeIcon(true);
+} else {
+  updateThemeIcon(false);
+}
+
+themeToggleBtn.addEventListener('click', toggleTheme);
+
 
 // Touch gesture handlers
 function handleTouchStart(e) {
