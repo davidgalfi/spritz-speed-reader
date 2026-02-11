@@ -4,12 +4,16 @@ var spritz;
 var words = [];
 var i = 0;
 var isPaused = false;
+var isReading = false;
 
 var spaceElement = document.querySelector('.spritz-word');
 var textArea = document.querySelector('.demo-text');
 var startButton = document.getElementById('spritz_start');
 var pauseButton = document.getElementById('spritz_pause');
+var stopButton = document.getElementById('spritz_stop');
 var wpmInput = document.getElementById('spritz_wpm');
+var settingsDiv = document.getElementById('settings');
+var readingControlsDiv = document.getElementById('reading_controls');
 
 function words_set() {
     words = textArea.value.replace(/\s{2,}/g, ' ').trim().split(' ').filter(word => word.length > 0);
@@ -34,9 +38,7 @@ function word_update(intervalTime) {
         
         if (i >= words.length) {
             setTimeout(function() {
-                spaceElement.innerHTML = '';
-                i = 0;
-                startButton.textContent = 'Start Reading';
+                stopReading();
             }, intervalTime);
             clearInterval(spritz);
         }
@@ -52,14 +54,18 @@ function startReading() {
         return;
     }
     
+    // Hide settings, show reading controls
+    settingsDiv.classList.add('hidden');
+    readingControlsDiv.style.display = 'flex';
+    isReading = true;
+    
     if (isPaused) {
         isPaused = false;
+        pauseButton.textContent = 'Pause';
     } else {
         i = 0;
     }
     
-    startButton.textContent = 'Restart';
-    pauseButton.textContent = 'Pause';
     word_update(60000 / wpmInput.value);
 }
 
@@ -75,12 +81,33 @@ function pauseReading() {
     }
 }
 
+function stopReading() {
+    clearInterval(spritz);
+    isPaused = false;
+    isReading = false;
+    i = 0;
+    
+    // Show settings, hide reading controls
+    settingsDiv.classList.remove('hidden');
+    readingControlsDiv.style.display = 'none';
+    pauseButton.textContent = 'Pause';
+    
+    // Clear the word display
+    spaceElement.innerHTML = '';
+    
+    // Show first word again
+    if (words.length > 0) {
+        word_show(0);
+    }
+}
+
 // Event Listeners
 startButton.addEventListener('click', startReading);
 pauseButton.addEventListener('click', pauseReading);
+stopButton.addEventListener('click', stopReading);
 
 wpmInput.addEventListener('input', function() {
-    if (!isPaused && spritz) {
+    if (isReading && !isPaused && spritz) {
         clearInterval(spritz);
         word_update(60000 / wpmInput.value);
     }

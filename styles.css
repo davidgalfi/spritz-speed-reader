@@ -12,6 +12,11 @@ body {
     background: #222;
     font-size: 1.4rem;
     font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .spritz {
@@ -21,7 +26,7 @@ body {
     padding: 1rem 0 1.2rem;
     border-top: 2px solid #ddd;
     border-bottom: 2px solid #ddd;
-    margin: 10rem auto;
+    margin: 2rem auto;
 }
 
 .spritz:before,
@@ -72,6 +77,11 @@ body {
 .settings {
     margin: 0 auto;
     max-width: 30rem;
+    transition: opacity 0.3s ease;
+}
+
+.settings.hidden {
+    display: none;
 }
 
 .settings input,
@@ -100,16 +110,14 @@ body {
     text-align: center;
 }
 
-.demo-text-change,
-.demo-text-pause {
+.demo-text-change {
     margin: 1rem auto;
     display: block;
     cursor: pointer;
     width: 18rem;
 }
 
-.demo-text-change:active,
-.demo-text-pause:active {
+.demo-text-change:active {
     padding: 1.1rem 1.5rem 0.9rem;
     background: linear-gradient(to top, #333, #444);
 }
@@ -117,6 +125,38 @@ body {
 .demo-text {
     width: 100%;
     height: 10em;
-    margin: 5rem 0 0;
+    margin: 2rem 0;
     resize: vertical;
+}
+
+/* Reading Controls */
+.reading-controls {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-top: 3rem;
+}
+
+.control-btn {
+    color: #ddd;
+    background: linear-gradient(to bottom, #333, #444);
+    border: 0;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    font-size: 1.4rem;
+    min-width: 10rem;
+    transition: all 0.2s ease;
+}
+
+.control-btn:hover {
+    background: linear-gradient(to bottom, #444, #555);
+}
+
+.control-btn:active {
+    padding: 1.1rem 2rem 0.9rem;
+    background: linear-gradient(to top, #333, #444);
+}
+
+.control-btn:focus {
+    outline: 2px solid #555;
 }
