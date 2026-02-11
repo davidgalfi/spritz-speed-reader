@@ -1,6 +1,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
+  /* Dark Mode (Default) */
   --bg:#222;
   --panel:#2b2b2b;
   --text:#ddd;
@@ -9,7 +10,30 @@
   --border:#555;
   --btn1:#333;
   --btn2:#444;
-  --rewind:#3478f6;
+  --rewind-bg-start:#2a5fb8;
+  --rewind-bg-end:#3478f6;
+  --danger-bg-start:#4a1c1a;
+  --danger-bg-end:#5a2422;
+  --input-bg: linear-gradient(to bottom, var(--btn1), var(--btn2));
+  --spritz-lines: #ddd;
+}
+
+/* Light Mode Override */
+body.light-mode {
+  --bg: #f5f5f7;
+  --panel: #ffffff;
+  --text: #1d1d1f;
+  --muted: #86868b;
+  --accent: #ff3b30; /* Keep red consistent for pivot */
+  --border: #d2d2d7;
+  --btn1: #e8e8ed;
+  --btn2: #d2d2d7;
+  --rewind-bg-start: #0071e3;
+  --rewind-bg-end: #0077ed;
+  --danger-bg-start: #ff453a;
+  --danger-bg-end: #ff3b30; /* Actually lighter red for light mode */
+  --input-bg: #ffffff;
+  --spritz-lines: #1d1d1f;
 }
 
 html{font-size:10px}
@@ -21,6 +45,27 @@ body{
   font-size:1.4rem;
   min-height:100vh;
   touch-action: pan-y;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  position: fixed;
+  top: max(1rem, env(safe-area-inset-top));
+  right: max(1rem, env(safe-area-inset-right));
+  background: none;
+  border: none;
+  font-size: 2.4rem;
+  cursor: pointer;
+  z-index: 1000;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+  background-color: rgba(128, 128, 128, 0.1);
 }
 
 .app{
@@ -37,8 +82,8 @@ body{
   position:relative;
   width:min(92vw, 36rem);
   padding:1rem 0 1.2rem;
-  border-top:2px solid var(--text);
-  border-bottom:2px solid var(--text);
+  border-top:2px solid var(--spritz-lines);
+  border-bottom:2px solid var(--spritz-lines);
   touch-action: pan-x;
   user-select: none;
 }
@@ -50,7 +95,7 @@ body{
   height:.8rem;
   width:2px;
   margin-left:-1px;
-  background-color:var(--text);
+  background-color:var(--spritz-lines);
 }
 .spritz:before{top:0}
 .spritz:after{bottom:0}
@@ -81,12 +126,20 @@ body{
 .demo-text{
   width:100%;
   color:var(--text);
-  border:1px solid #0000;
+  border:1px solid transparent;
   border-radius:1rem;
-  background:linear-gradient(to bottom, var(--btn1), var(--btn2));
+  background: var(--input-bg);
   padding:1.2rem 1.4rem;
   outline:none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Subtle shadow for depth */
 }
+
+/* Specific styling for light mode inputs to look nice */
+body.light-mode .speed, 
+body.light-mode .demo-text {
+  border: 1px solid var(--border);
+}
+
 
 .speed{height:4.4rem;text-align:center;font-weight:700}
 .demo-text{min-height:10em;max-height:40vh;resize:vertical;line-height:1.4}
@@ -99,13 +152,22 @@ body{
   width:100%;
   border:0;
   border-radius:1rem;
-  color:var(--text);
+  color: #fff; /* Always white text on buttons usually looks better, or var(--text) if buttons change bg */
   background:linear-gradient(to bottom, var(--btn1), var(--btn2));
   padding:1.2rem 1.6rem;
   cursor:pointer;
   font-size:1.5rem;
   font-weight:650;
+  color: var(--text); /* Use theme text color for main buttons */
 }
+/* Override text color for primary/control buttons in light mode if needed */
+body.light-mode .primary,
+body.light-mode .control-btn {
+   color: var(--text);
+   background: var(--btn1); /* Solid color or gradient */
+   border: 1px solid var(--border);
+}
+
 
 .primary:active,
 .control-btn:active{transform:translateY(1px)}
@@ -118,22 +180,30 @@ body{
 }
 
 .control-btn.rewind{
-  background:linear-gradient(to bottom, #2a5fb8, #3478f6);
+  background:linear-gradient(to bottom, var(--rewind-bg-start), var(--rewind-bg-end));
   font-size:1.4rem;
+  color: white; /* Rewind always white text on blue */
+  border: none;
 }
 
 .control-btn.danger{
-  background:linear-gradient(to bottom, #4a1c1a, #5a2422);
+  background:linear-gradient(to bottom, var(--danger-bg-start), var(--danger-bg-end));
+  color: white; /* Stop always white text on red */
+  border: none;
 }
 
 body.reading-mode .settings{display:none}
 body.reading-mode .reading-controls{display:grid}
+/* Hide theme toggle during reading to minimize distraction */
+body.reading-mode .theme-toggle{display:none}
+
 
 .advanced-settings{
   background:var(--panel);
   border-radius:1rem;
   padding:1rem;
   margin:.6rem 0;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 .advanced-settings summary{
@@ -173,7 +243,7 @@ body.reading-mode .reading-controls{display:grid}
   height:3.2rem;
   text-align:center;
   border-radius:.6rem;
-  background:linear-gradient(to bottom, var(--btn1), var(--btn2));
+  background: var(--input-bg);
   border:1px solid var(--border);
   color:var(--text);
   padding:.4rem;
