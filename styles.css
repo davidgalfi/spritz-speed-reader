@@ -9,6 +9,7 @@
   --border:#555;
   --btn1:#333;
   --btn2:#444;
+  --rewind:#3478f6;
 }
 
 html{font-size:10px}
@@ -19,6 +20,7 @@ body{
   font-family:'Open Sans','Segoe UI',Arial,sans-serif;
   font-size:1.4rem;
   min-height:100vh;
+  touch-action: pan-y;
 }
 
 .app{
@@ -37,6 +39,8 @@ body{
   padding:1rem 0 1.2rem;
   border-top:2px solid var(--text);
   border-bottom:2px solid var(--text);
+  touch-action: pan-x;
+  user-select: none;
 }
 
 .spritz:before,.spritz:after{
@@ -108,20 +112,23 @@ body{
 
 .reading-controls{
   width:min(92vw, 36rem);
-  display:flex;
-  gap:1.2rem;
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap:1rem;
 }
 
-.reading-controls .control-btn{width:50%}
+.control-btn.rewind{
+  background:linear-gradient(to bottom, #2a5fb8, #3478f6);
+  font-size:1.4rem;
+}
 
 .control-btn.danger{
   background:linear-gradient(to bottom, #4a1c1a, #5a2422);
 }
 
 body.reading-mode .settings{display:none}
-body.reading-mode .reading-controls{display:flex}
+body.reading-mode .reading-controls{display:grid}
 
-/* Advanced settings */
 .advanced-settings{
   background:var(--panel);
   border-radius:1rem;
@@ -173,8 +180,7 @@ body.reading-mode .reading-controls{display:flex}
 }
 
 @media (max-width: 380px){
-  .reading-controls{flex-direction:column}
-  .reading-controls .control-btn{width:100%}
+  .reading-controls{grid-template-columns: 1fr; gap:1rem}
 }
 
 @media (max-height: 520px){
