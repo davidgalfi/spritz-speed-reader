@@ -11,11 +11,15 @@
         <div class="spritz-word"></div>
     </div>
     
-    <div class="settings">
+    <div class="settings" id="settings">
         <input class="speed" id="spritz_wpm" type="number" value="300" step="50" min="50" max="1000">
-        <textarea class="demo-text" placeholder="Paste your text here to start speed reading...">Spritz. This is a jQuery implementation of Spritz technology. Paste some text below to try out your speed reading. Reading is inherently time consuming because your eyes have to move from word to word and line to line. Traditional reading also consumes huge amounts of physical space on a page or screen, which limits reading effectiveness on small displays. Scrolling, pinching, and resizing a reading area doesn't fix the problem and only frustrates people. Now, with compact text streaming from Spritz, content can be streamed one word at a time, without forcing your eyes to spend time moving around the page. Spritz makes streaming your content easy and more comfortable, especially on small displays. Our "Redicle" technology enhances readability even more by using horizontal lines and hash marks to direct your eyes to the red letter in each word, so you can focus on the content that interests you. Best of all, Spritz's patent-pending technology can integrate into photos, maps, videos, and websites to promote more effective communication.</textarea>
+        <textarea class="demo-text" id="demo_text" placeholder="Paste your text here to start speed reading...">Spritz. This is a jQuery implementation of Spritz technology. Paste some text below to try out your speed reading. Reading is inherently time consuming because your eyes have to move from word to word and line to line. Traditional reading also consumes huge amounts of physical space on a page or screen, which limits reading effectiveness on small displays. Scrolling, pinching, and resizing a reading area doesn't fix the problem and only frustrates people. Now, with compact text streaming from Spritz, content can be streamed one word at a time, without forcing your eyes to spend time moving around the page. Spritz makes streaming your content easy and more comfortable, especially on small displays. Our "Redicle" technology enhances readability even more by using horizontal lines and hash marks to direct your eyes to the red letter in each word, so you can focus on the content that interests you. Best of all, Spritz's patent-pending technology can integrate into photos, maps, videos, and websites to promote more effective communication.</textarea>
         <button class="demo-text-change" id="spritz_start">Start Reading</button>
-        <button class="demo-text-pause" id="spritz_pause">Pause</button>
+    </div>
+    
+    <div class="reading-controls" id="reading_controls" style="display: none;">
+        <button class="control-btn" id="spritz_pause">Pause</button>
+        <button class="control-btn" id="spritz_stop">Stop</button>
     </div>
     
     <script src="script.js"></script>
