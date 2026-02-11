@@ -9,8 +9,10 @@ var textArea = document.getElementById('demo_text');
 var startButton = document.getElementById('spritz_start');
 var pauseButton = document.getElementById('spritz_pause');
 var stopButton = document.getElementById('spritz_stop');
+var rewindButton = document.getElementById('spritz_rewind');
 var wpmInput = document.getElementById('spritz_wpm');
 var readingControlsDiv = document.getElementById('reading_controls');
+var spritzArea = document.getElementById('spritz_area');
 
 // Advanced settings
 var longWordPauseEnabled = document.getElementById('long_word_pause');
@@ -19,10 +21,16 @@ var punctuationPauseEnabled = document.getElementById('punctuation_pause');
 var punctuationMultiplier = document.getElementById('punctuation_multiplier');
 var specialPauseEnabled = document.getElementById('special_pause');
 var specialMultiplier = document.getElementById('special_multiplier');
+var rewindAmountInput = document.getElementById('rewind_amount');
 
 var LONG_WORD_THRESHOLD = 9;
 var PUNCTUATION_REGEX = /[.,;:!?]+$/;
 var SPECIAL_CHARS_REGEX = /[\(\)\[\]\/\\\-]+$/;
+
+// Touch gesture variables
+var touchStartX = 0;
+var touchEndX = 0;
+var SWIPE_THRESHOLD = 50;
 
 function getBaseIntervalMs(){
   var wpm = Number(wpmInput.value) || 300;
@@ -34,17 +42,14 @@ function getIntervalForWord(word) {
   var baseInterval = getBaseIntervalMs();
   var multiplier = 1;
 
-  // Check for long words
   if (longWordPauseEnabled.checked && word.length >= LONG_WORD_THRESHOLD) {
     multiplier = Math.max(multiplier, Number(longWordMultiplier.value) || 1.5);
   }
 
-  // Check for punctuation at end of word
   if (punctuationPauseEnabled.checked && PUNCTUATION_REGEX.test(word)) {
     multiplier = Math.max(multiplier, Number(punctuationMultiplier.value) || 2);
   }
 
-  // Check for special characters
   if (specialPauseEnabled.checked && SPECIAL_CHARS_REGEX.test(word)) {
     multiplier = Math.max(multiplier, Number(specialMultiplier.value) || 1.3);
   }
@@ -153,9 +158,51 @@ function stopReading() {
   if (words.length > 0) word_show(0);
 }
 
+function rewindReading() {
+  if (!isReading) return;
+
+  var rewindAmount = Number(rewindAmountInput.value) || 10;
+  
+  // Jump back by rewindAmount words, but don't go negative
+  i = Math.max(0, i - rewindAmount - 1);
+  
+  // If we were paused, stay paused and just show the word
+  if (isPaused) {
+    word_show(i);
+    i++;
+  } else {
+    // If we were reading, restart from the new position
+    clearTimeout(spritz);
+    word_update();
+  }
+}
+
+// Touch gesture handlers
+function handleTouchStart(e) {
+  if (!isReading) return;
+  touchStartX = e.changedTouches[0].screenX;
+}
+
+function handleTouchEnd(e) {
+  if (!isReading) return;
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipeGesture();
+}
+
+function handleSwipeGesture() {
+  var swipeDistance = touchEndX - touchStartX;
+  
+  // Swipe right (left to right) = rewind
+  if (swipeDistance > SWIPE_THRESHOLD) {
+    rewindReading();
+  }
+}
+
+// Event Listeners
 startButton.addEventListener('click', startReading);
 pauseButton.addEventListener('click', pauseReading);
 stopButton.addEventListener('click', stopReading);
+rewindButton.addEventListener('click', rewindReading);
 
 wpmInput.addEventListener('input', function() {
   if (isReading && !isPaused) {
@@ -164,12 +211,23 @@ wpmInput.addEventListener('input', function() {
   }
 });
 
+// Keyboard shortcuts
 window.addEventListener('keydown', function(e){
-  if (e.code === 'Space' && isReading){
+  if (!isReading) return;
+  
+  if (e.code === 'Space'){
     e.preventDefault();
     pauseReading();
+  } else if (e.code === 'ArrowLeft'){
+    e.preventDefault();
+    rewindReading();
   }
 });
 
+// Touch gesture listeners
+spritzArea.addEventListener('touchstart', handleTouchStart, {passive: true});
+spritzArea.addEventListener('touchend', handleTouchEnd, {passive: true});
+
+// Initialize
 words_set();
 if (words.length > 0) word_show(0);

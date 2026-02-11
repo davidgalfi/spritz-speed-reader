@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
   <title>Spritz Speed Reader</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main class="app">
-    <section class="spritz" aria-label="Spritz reader">
+    <section class="spritz" id="spritz_area" aria-label="Spritz reader">
       <div class="spritz-word" aria-live="polite"></div>
     </section>
 
@@ -45,6 +45,10 @@
             <input type="number" id="special_multiplier" value="1.3" step="0.1" min="1" max="3" class="small-input" />
             <span>Special char delay multiplier</span>
           </label>
+          <label class="field-inline">
+            <input type="number" id="rewind_amount" value="10" step="1" min="1" max="50" class="small-input" />
+            <span>Rewind amount (words)</span>
+          </label>
         </div>
       </details>
 
@@ -57,6 +61,7 @@
     </section>
 
     <section class="reading-controls" id="reading_controls" aria-label="Reading controls" hidden>
+      <button class="control-btn rewind" id="spritz_rewind" type="button" title="Jump back (swipe left or press ←)">⏪ Rewind</button>
       <button class="control-btn" id="spritz_pause" type="button">Pause</button>
       <button class="control-btn danger" id="spritz_stop" type="button">Stop</button>
     </section>
